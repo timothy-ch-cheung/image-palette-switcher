@@ -1,4 +1,4 @@
-import { Alert, Box, Collapse } from "@mui/material";
+import { Alert, Collapse } from "@mui/material";
 import React, { createContext, useContext, useState } from "react";
 
 type AlertContextType = {
