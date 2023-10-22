@@ -2,8 +2,11 @@ import React, { useState } from "react";
 import Paper from "@mui/material/Paper";
 import Dropzone, { FileRejection } from "react-dropzone";
 import { useAlert } from "./AlertContext";
+import ImageDisplay, { Dimensions, Image } from "./ImageDisplay";
 
 const COMPATIBLE_TYPES = ["image/png", "image/jpeg"];
+const DROP_SIZE = 45;
+const IMG_SIZE = DROP_SIZE - 5;
 
 function arrayBufferToBase64(buffer: ArrayBuffer) {
   var binary = "";
@@ -17,7 +20,10 @@ function arrayBufferToBase64(buffer: ArrayBuffer) {
 
 export default function ImageDropzone() {
   const { showAlert } = useAlert();
-  const [img, setImg] = useState<string | undefined>(undefined);
+  const [img, setImg] = useState<Image | undefined>(undefined);
+  const [imgDimensions, setImageDimensions] = useState<Dimensions | undefined>(
+    undefined
+  );
 
   const dropFailedHandler = (fileRejections: FileRejection[]) => {
     let messages = new Set(
@@ -35,16 +41,18 @@ export default function ImageDropzone() {
   };
 
   const dropSuccessHandler = (files: File[]) => {
-    files.forEach((file: File) => {
-      console.log(file.name);
+    let file = files[0]
       file.arrayBuffer().then((buffer) => {
-        setImg(`data:${file.type};base64, ` + arrayBufferToBase64(buffer));
-      });
-    });
-  };
+        setImg({
+          fileName: file.name,
+          base64: `data:${file.type};base64, ${arrayBufferToBase64(buffer)}`,
+        });
+      })
+    }
 
+  const imgSize = (window.innerHeight * IMG_SIZE) / 100;
   return (
-    <Paper style={{ width: "45vh", height: "45vh" }}>
+    <Paper style={{ width: `${DROP_SIZE}vh`, height: `${DROP_SIZE}vh` }}>
       {img === undefined && (
         <Dropzone
           accept={{ COMPATIBLE_TYPES }}
@@ -56,8 +64,8 @@ export default function ImageDropzone() {
             <div
               {...getRootProps()}
               style={{
-                width: "45vh",
-                height: "45vh",
+                width: `${DROP_SIZE}vh`,
+                height: `${DROP_SIZE}vh`,
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
@@ -69,7 +77,12 @@ export default function ImageDropzone() {
           )}
         </Dropzone>
       )}
-      {img != null && <img src={img} alt="user supplied" />}
+      {img != null && (
+        <ImageDisplay
+          img={img}
+          dimensions={{ width: imgSize, height: imgSize }}
+        />
+      )}
     </Paper>
   );
 }
