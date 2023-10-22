@@ -49,8 +49,13 @@ function calculateScaledDimensions(
 function countUniqueColours(img: ImageData) {
   const uniqueColors = new Set();
 
-  // Iterate through the pixel data and convert RGB to hex
+  const estimate = img.data.length > 512 ** 2;
+  const pixelsToCheck = Math.floor(img.data.length / 10 ** 3);
+
   for (let i = 0; i < img.data.length; i += 4) {
+    if (estimate && !(i % pixelsToCheck === 0)) {
+      continue;
+    }
     const r = img.data[i];
     const g = img.data[i + 1];
     const b = img.data[i + 2];
@@ -59,7 +64,7 @@ function countUniqueColours(img: ImageData) {
       .padStart(2, "0")}${b.toString(16).padStart(2, "0")}`;
     uniqueColors.add(hexColor);
   }
-
+  console.log("Num Colours:", uniqueColors.size);
   return uniqueColors.size;
 }
 
