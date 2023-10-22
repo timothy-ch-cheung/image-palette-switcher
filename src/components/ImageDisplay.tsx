@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 
-export interface Image {
+export interface LoadedImage {
   base64: string;
+  image: ImageData;
   fileName: string;
+  dimensions: Dimensions;
 }
 
 export interface Dimensions {
@@ -11,7 +13,7 @@ export interface Dimensions {
 }
 
 interface ImageDisplayProps {
-  img: Image;
+  img: LoadedImage;
   dimensions: Dimensions;
 }
 
@@ -20,8 +22,8 @@ function doesImageOverflowWindow(
   windowDimensions: Dimensions
 ) {
   return (
-    srcDimensions.width < windowDimensions.width &&
-    srcDimensions.height < windowDimensions.height
+    srcDimensions.width > windowDimensions.width ||
+    srcDimensions.height > windowDimensions.height
   );
 }
 
@@ -33,21 +35,35 @@ function calculateScaledDimensions(
   let scaleX = windowDimensions.width / srcDimensions.width;
   let scaleY = windowDimensions.height / srcDimensions.height;
   let scale = Math.min(scaleX, scaleY);
+  scale = Number.isNaN(scale) ? 1 : scale;
+
   if (isPixelArt) {
     scale = Math.floor(scale);
   }
-  console.log(scale);
   return {
     width: srcDimensions.width * scale,
     height: srcDimensions.height * scale,
   };
 }
 
+function countUniqueColours(img: ImageData) {
+  const uniqueColors = new Set();
+
+  // Iterate through the pixel data and convert RGB to hex
+  for (let i = 0; i < img.data.length; i += 4) {
+    const r = img.data[i];
+    const g = img.data[i + 1];
+    const b = img.data[i + 2];
+    const hexColor = `#${r.toString(16).padStart(2, "0")}${g
+      .toString(16)
+      .padStart(2, "0")}${b.toString(16).padStart(2, "0")}`;
+    uniqueColors.add(hexColor);
+  }
+
+  return uniqueColors.size;
+}
+
 export default function ImageDisplay(props: ImageDisplayProps) {
-  const [srcDimensions, setSrcDimensions] = useState<Dimensions>({
-    width: 0,
-    height: 0,
-  });
   const [targetDimensions, setTargetDimensions] = useState<Dimensions>({
     width: 0,
     height: 0,
@@ -55,27 +71,31 @@ export default function ImageDisplay(props: ImageDisplayProps) {
   const [isPixelArt, setIsPixelArt] = useState<boolean>(false);
 
   useEffect(() => {
-    const img = new Image();
-    img.src = props.img.base64;
-
-    if (img.complete) {
-      setSrcDimensions({ width: img.width, height: img.height });
-    }
-
-    img.onload = () => {
-      setSrcDimensions({ width: img.width, height: img.height });
-    };
-  }, [props.img.base64]);
-
-  useEffect(() => {
     setTargetDimensions(
       calculateScaledDimensions(
-        false,
-        { width: srcDimensions.width, height: srcDimensions.height },
+        isPixelArt,
+        {
+          width: props.img.dimensions.width,
+          height: props.img.dimensions.height,
+        },
         props.dimensions
       )
     );
-  }, [props.dimensions, srcDimensions]);
+  }, [
+    isPixelArt,
+    props.dimensions,
+    props.img.dimensions.height,
+    props.img.dimensions.width,
+  ]);
+
+  useEffect(() => {
+    const numColours = countUniqueColours(props.img.image);
+    const isOverflowed = doesImageOverflowWindow(
+      props.img.dimensions,
+      props.dimensions
+    );
+    setIsPixelArt(numColours <= 256 && !isOverflowed);
+  }, [props.dimensions, props.img.dimensions, props.img.image]);
 
   return (
     <div>
