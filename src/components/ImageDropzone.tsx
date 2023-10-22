@@ -3,6 +3,8 @@ import Paper from "@mui/material/Paper";
 import Dropzone, { FileRejection } from "react-dropzone";
 import { useAlert } from "./AlertContext";
 import ImageDisplay, { Dimensions, LoadedImage } from "./ImageDisplay";
+import { IconButton } from "@mui/material";
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const COMPATIBLE_TYPES = ["image/png", "image/jpeg"];
 const DROP_SIZE = 45;
@@ -100,7 +102,17 @@ export default function ImageDropzone() {
 
   const imgSize = (window.innerHeight * IMG_SIZE) / 100;
   return (
-    <Paper style={{ width: `${DROP_SIZE}vh`, height: `${DROP_SIZE}vh` }}>
+    <Paper
+      style={{
+        width: `${DROP_SIZE}vh`,
+        height: `${DROP_SIZE}vh`,
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        flex: "0 0 auto",
+      }}
+    >
       {img === undefined && (
         <Dropzone
           accept={{ COMPATIBLE_TYPES }}
@@ -115,6 +127,7 @@ export default function ImageDropzone() {
                 width: `${DROP_SIZE}vh`,
                 height: `${DROP_SIZE}vh`,
                 display: "flex",
+                flexDirection: "row",
                 justifyContent: "center",
                 alignItems: "center",
               }}
@@ -126,10 +139,14 @@ export default function ImageDropzone() {
         </Dropzone>
       )}
       {img !== undefined && (
-        <ImageDisplay
+        <><IconButton aria-label="delete" onClick={() => setImg(undefined)}>
+        <DeleteIcon />
+      </IconButton>
+      <ImageDisplay
           img={img}
           dimensions={{ width: imgSize, height: imgSize }}
-        />
+        /></>
+        
       )}
     </Paper>
   );
