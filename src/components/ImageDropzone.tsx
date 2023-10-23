@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React from "react";
 import Paper from "@mui/material/Paper";
 import Dropzone, { FileRejection } from "react-dropzone";
 import { useAlert } from "./AlertContext";
-import ImageDisplay, { Dimensions, LoadedImage } from "./ImageDisplay";
+import ImageDisplay, { Dimensions } from "./ImageDisplay";
 import { IconButton } from "@mui/material";
-import DeleteIcon from '@mui/icons-material/Delete';
+import DeleteIcon from "@mui/icons-material/Delete";
+import { useSharedData } from "./DataProvider";
 
 const COMPATIBLE_TYPES = ["image/png", "image/jpeg"];
 const DROP_SIZE = 45;
@@ -42,7 +43,7 @@ function base64ToImageData(base64: string, dimensions: Dimensions): ImageData {
 
 export default function ImageDropzone() {
   const { showAlert } = useAlert();
-  const [img, setImg] = useState<LoadedImage | undefined>(undefined);
+  const { srcImage, replaceSrcImage, updateSrcImage } = useSharedData();
 
   const dropFailedHandler = (fileRejections: FileRejection[]) => {
     let messages = new Set(
@@ -72,7 +73,7 @@ export default function ImageDropzone() {
 
       let dimensions = { width: img.width, height: img.height };
 
-      setImg({
+      replaceSrcImage({
         fileName: file.name,
         base64: base64Img,
         image: base64ToImageData(base64Img, dimensions),
@@ -81,16 +82,9 @@ export default function ImageDropzone() {
 
       img.onload = () => {
         const newDimensions = { width: img.width, height: img.height };
-        setImg((prevState) => {
-          if (prevState === undefined) {
-            return undefined;
-          } else {
-            return {
-              ...prevState,
-              image: base64ToImageData(prevState.base64, newDimensions),
-              dimensions: newDimensions,
-            };
-          }
+        updateSrcImage({
+          image: base64ToImageData(base64Img, newDimensions),
+          dimensions: newDimensions,
         });
       };
 
@@ -113,7 +107,7 @@ export default function ImageDropzone() {
         flex: "0 0 auto",
       }}
     >
-      {img === undefined && (
+      {srcImage === undefined && (
         <Dropzone
           accept={{ COMPATIBLE_TYPES }}
           maxFiles={1}
@@ -138,15 +132,19 @@ export default function ImageDropzone() {
           )}
         </Dropzone>
       )}
-      {img !== undefined && (
-        <><IconButton aria-label="delete" onClick={() => setImg(undefined)}>
-        <DeleteIcon />
-      </IconButton>
-      <ImageDisplay
-          img={img}
-          dimensions={{ width: imgSize, height: imgSize }}
-        /></>
-        
+      {srcImage !== undefined && (
+        <>
+          <IconButton
+            aria-label="delete"
+            onClick={() => replaceSrcImage(undefined)}
+          >
+            <DeleteIcon />
+          </IconButton>
+          <ImageDisplay
+            img={srcImage}
+            dimensions={{ width: imgSize, height: imgSize }}
+          />
+        </>
       )}
     </Paper>
   );

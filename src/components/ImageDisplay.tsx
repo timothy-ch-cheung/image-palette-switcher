@@ -36,7 +36,6 @@ function calculateScaledDimensions(
   let scaleY = windowDimensions.height / srcDimensions.height;
   let scale = Math.min(scaleX, scaleY);
   scale = Number.isNaN(scale) ? 1 : scale;
-
   if (isPixelArt) {
     scale = Math.floor(scale);
   }
@@ -64,7 +63,6 @@ function countUniqueColours(img: ImageData) {
       .padStart(2, "0")}${b.toString(16).padStart(2, "0")}`;
     uniqueColors.add(hexColor);
   }
-  console.log("Num Colours:", uniqueColors.size);
   return uniqueColors.size;
 }
 
