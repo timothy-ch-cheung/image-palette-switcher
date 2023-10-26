@@ -8,7 +8,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { useSharedData } from "./DataProvider";
 
 const COMPATIBLE_TYPES = ["image/png", "image/jpeg"];
-const DROP_SIZE = 45;
+const DROP_SIZE = 50;
 const IMG_SIZE = DROP_SIZE - 5;
 
 function arrayBufferToBase64(buffer: ArrayBuffer) {

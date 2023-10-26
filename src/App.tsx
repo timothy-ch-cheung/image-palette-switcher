@@ -5,6 +5,9 @@ import CssBaseline from "@mui/material/CssBaseline";
 import ImageDropzone from "./components/ImageDropzone";
 import { AlertProvider } from "./components/AlertContext";
 import { DataProvider } from "./components/DataProvider";
+import { PaletteSelecter } from "./components/PaletteSelecter";
+import { ResultDisplay } from "./components/ResultDisplay";
+import { PaletteDisplay } from "./components/PaletteDisplay";
 
 const darkTheme = createTheme({
   palette: {
@@ -19,7 +22,12 @@ function App() {
       <AlertProvider>
         <DataProvider>
           <div className="App">
-            <ImageDropzone />
+            <div className="MainPanel">
+              <PaletteSelecter />
+              <ImageDropzone />
+              <ResultDisplay />
+            </div>
+            <PaletteDisplay />
           </div>
         </DataProvider>
       </AlertProvider>
