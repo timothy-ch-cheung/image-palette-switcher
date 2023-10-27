@@ -8,12 +8,7 @@ function isLight(colour: RGBColor) {
 }
 
 export function PaletteDisplay() {
-  const { palette } = useSharedData();
-  const [, forceUpdate] = useReducer((x) => x + 1, 0);
-
-  useEffect(() => {
-    forceUpdate();
-  }, [palette]);
+  const { palette, replacePalette } = useSharedData();
 
   return (
     <Paper style={{ minHeight: "10vh", width: "80vw", padding: "10px" }}>
@@ -34,6 +29,11 @@ export function PaletteDisplay() {
               style={{
                 backgroundColor: colour.hex,
                 color: isLight(colour.rgb) ? "#000" : "#fff",
+              }}
+              onDelete={() => {
+                const newPalette = [...palette];
+                newPalette.splice(index, 1);
+                replacePalette(newPalette);
               }}
             />
           );
