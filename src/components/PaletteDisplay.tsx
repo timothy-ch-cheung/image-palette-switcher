@@ -1,10 +1,9 @@
 import { Chip, Paper } from "@mui/material";
 import { useSharedData } from "./DataProvider";
-import { useEffect, useReducer } from "react";
 import { RGBColor } from "react-color";
 
 function isLight(colour: RGBColor) {
-  return Math.min(colour.r, colour.g, colour.b) >= 200;
+  return Math.min(colour.r, colour.g, colour.b) >= 175;
 }
 
 export function PaletteDisplay() {
