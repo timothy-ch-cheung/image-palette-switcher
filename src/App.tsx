@@ -8,6 +8,7 @@ import { DataProvider } from "./components/DataProvider";
 import { PaletteSelecter } from "./components/PaletteSelecter";
 import { ResultDisplay } from "./components/ResultDisplay";
 import { PaletteDisplay } from "./components/PaletteDisplay";
+import { PaletteSwitcher } from "./components/PaletteSwitch";
 
 const darkTheme = createTheme({
   palette: {
@@ -27,7 +28,11 @@ function App() {
               <ImageDropzone />
               <ResultDisplay />
             </div>
+            <div className="MainPanel">
+              <PaletteSwitcher/>
             <PaletteDisplay />
+            </div>
+            
           </div>
         </DataProvider>
       </AlertProvider>

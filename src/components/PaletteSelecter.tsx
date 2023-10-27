@@ -123,14 +123,6 @@ export function PaletteSelecter() {
       >
         Add Colour
       </Button>
-      <Button
-        variant="contained"
-        color="primary"
-        sx={{ height: "60px", fontWeight: "bold" }}
-        onClick={() => {}}
-      >
-        Convert
-      </Button>
     </Paper>
   );
 }
