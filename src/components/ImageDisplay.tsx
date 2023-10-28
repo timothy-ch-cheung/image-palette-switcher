@@ -1,10 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
+import { useSharedData } from "./DataProvider";
 
-export interface LoadedImage {
+export interface StoredImage {
   base64: string;
+  dimensions: Dimensions;
+}
+
+export interface LoadedImage extends StoredImage {
   image: ImageData;
   fileName: string;
-  dimensions: Dimensions;
 }
 
 export interface Dimensions {
@@ -67,14 +71,15 @@ function countUniqueColours(img: ImageData) {
 }
 
 export default function ImageDisplay(props: ImageDisplayProps) {
-  const [targetDimensions, setTargetDimensions] = useState<Dimensions>({
-    width: 0,
-    height: 0,
-  });
-  const [isPixelArt, setIsPixelArt] = useState<boolean>(false);
+  const {
+    targetDimensions,
+    updateTargetDimensions,
+    isPixelArt,
+    updateIsPixelArt,
+  } = useSharedData();
 
   useEffect(() => {
-    setTargetDimensions(
+    updateTargetDimensions(
       calculateScaledDimensions(
         isPixelArt,
         {
@@ -97,8 +102,13 @@ export default function ImageDisplay(props: ImageDisplayProps) {
       props.img.dimensions,
       props.dimensions
     );
-    setIsPixelArt(numColours <= 256 && !isOverflowed);
-  }, [props.dimensions, props.img.dimensions, props.img.image]);
+    updateIsPixelArt(numColours <= 256 && !isOverflowed);
+  }, [
+    props.dimensions,
+    props.img.dimensions,
+    props.img.image,
+    updateIsPixelArt,
+  ]);
 
   return (
     <div>

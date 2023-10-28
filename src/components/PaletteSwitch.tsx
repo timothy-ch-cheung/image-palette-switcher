@@ -6,13 +6,25 @@ import {
   SelectChangeEvent,
 } from "@mui/material";
 import { useState } from "react";
+import { useSharedData } from "./DataProvider";
+import { LoadedImage } from "./ImageDisplay";
+import { PaletteColour } from "./PaletteSelecter";
 
-enum Algorithm {
+export enum Algorithm {
   COLOUR_SIMILARITY = "Colour Similarity",
   SHADE_SIMILARITY = "Shade Similarity",
 }
 
-export function PaletteSwitcher() {
+interface PaletteSwitcherProps {
+  switchPalette: (
+    loadedImage: LoadedImage | undefined,
+    palette: PaletteColour[],
+    algorithm: Algorithm
+  ) => void;
+}
+
+export function PaletteSwitcher(props: PaletteSwitcherProps) {
+  const { srcImage, palette } = useSharedData();
   const [algorithm, setAlgorithm] = useState<Algorithm>(
     Algorithm.COLOUR_SIMILARITY
   );
@@ -50,7 +62,10 @@ export function PaletteSwitcher() {
         variant="contained"
         color="primary"
         sx={{ height: "60px", fontWeight: "bold" }}
-        onClick={() => {}}
+        onClick={() => {
+          console.log(srcImage?.base64, palette);
+          props.switchPalette(srcImage, palette, algorithm);
+        }}
       >
         Convert
       </Button>

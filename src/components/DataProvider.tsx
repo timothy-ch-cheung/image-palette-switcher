@@ -1,5 +1,5 @@
 import { createContext, useContext, useState } from "react";
-import { LoadedImage } from "./ImageDisplay";
+import { Dimensions, LoadedImage } from "./ImageDisplay";
 import { PaletteColour } from "./PaletteSelecter";
 
 type SharedDataContextType = {
@@ -10,6 +10,12 @@ type SharedDataContextType = {
   palette: PaletteColour[];
   replacePalette: (palette: PaletteColour[]) => void;
   addToPalette: (colour: PaletteColour) => void;
+
+  targetDimensions: Dimensions;
+  updateTargetDimensions: (dimensions: Dimensions) => void;
+
+  isPixelArt: boolean;
+  updateIsPixelArt: (isPixelArt: boolean) => void;
 };
 const SharedDataContext = createContext<SharedDataContextType>({
   replaceSrcImage: () => {},
@@ -18,6 +24,15 @@ const SharedDataContext = createContext<SharedDataContextType>({
   palette: [],
   replacePalette: () => {},
   addToPalette: () => {},
+
+  targetDimensions: {
+    width: 0,
+    height: 0,
+  },
+  updateTargetDimensions: () => {},
+
+  isPixelArt: true,
+  updateIsPixelArt: () => {},
 });
 
 export function useSharedData() {
@@ -55,9 +70,24 @@ export function DataProvider(props: DataProviderProps) {
   const addToPalette = (paletteColour: PaletteColour) => {
     setPalette((prevState) => {
       const newState = [...prevState];
-      newState.push(paletteColour)
+      newState.push(paletteColour);
       return newState;
     });
+  };
+
+  const [targetDimensions, setTargetDimensions] = useState<Dimensions>({
+    width: 0,
+    height: 0,
+  });
+
+  const updateTargetDimensions = (dimensions: Dimensions) => {
+    setTargetDimensions(dimensions);
+  };
+
+  const [isPixelArt, setIsPixelArt] = useState<boolean>(true);
+
+  const updateIsPixelArt = (isPixelArt: boolean) => {
+    setIsPixelArt(isPixelArt);
   };
 
   return (
@@ -69,6 +99,10 @@ export function DataProvider(props: DataProviderProps) {
         palette,
         replacePalette,
         addToPalette,
+        targetDimensions,
+        updateTargetDimensions,
+        isPixelArt,
+        updateIsPixelArt,
       }}
     >
       {props.children}
