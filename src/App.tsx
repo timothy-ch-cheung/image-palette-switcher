@@ -64,15 +64,17 @@ function switchColourPalette(
     return TRANSPARENT_PLACEHOLDER_IMG;
   }
 
+  ctx.putImageData(loadedImage.image, 0, 0);
+  const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+
   const colourMapping = new Map<string, RGBColor>();
   for (let y = 0; y < canvas.height; y++) {
     for (let x = 0; x < canvas.width; x++) {
       const index = (y * canvas.width + x) * 4;
 
-      const red = loadedImage.image.data[index];
-      const green = loadedImage.image.data[index + 1];
-      const blue = loadedImage.image.data[index + 2];
-      const alpha = loadedImage.image.data[index + 3];
+      const red = imageData.data[index];
+      const green = imageData.data[index + 1];
+      const blue = imageData.data[index + 2];
 
       const currentColour = { r: red, g: green, b: blue };
       const colourKey = rgbToString(currentColour);
@@ -82,11 +84,14 @@ function switchColourPalette(
         colourMapping.set(colourKey, convertedColour);
       }
 
-      ctx.fillStyle = `rgba(${convertedColour.r}, ${convertedColour.g}, ${convertedColour.b}, ${alpha})`;
-      ctx.fillRect(x, y, 1, 1);
+      imageData.data[index] = convertedColour.r;
+      imageData.data[index + 1] = convertedColour.g;
+      imageData.data[index + 2] = convertedColour.b;
     }
   }
-  console.log(canvas.toDataURL());
+
+  ctx.putImageData(imageData, 0, 0);
+
   return {
     base64: canvas.toDataURL(),
     dimensions: { width: canvas.width, height: canvas.height },
