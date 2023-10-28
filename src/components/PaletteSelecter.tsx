@@ -22,8 +22,6 @@ enum PalettePreset {
   APOLLO = "APOLLO",
 }
 
-const SIZE = 50;
-
 function getPresetPalette(colours: string[]): PaletteColour[] {
   return colours.map((colour) => {
     const [r, g, b] = chroma(colour).rgb();
@@ -78,7 +76,6 @@ export function PaletteSelecter() {
   return (
     <Paper
       style={{
-        height: `${SIZE}vh`,
         padding: "10px",
         display: "flex",
         flexDirection: "column",
@@ -114,7 +111,7 @@ export function PaletteSelecter() {
       <SketchPicker
         color={currentColour.hex}
         onChange={colourChangeHandler}
-        width="15vw"
+        width="calc(100% - 20px)"
       ></SketchPicker>
       <Button
         variant="contained"

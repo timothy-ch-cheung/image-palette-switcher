@@ -21,10 +21,12 @@ interface PaletteSwitcherProps {
     palette: PaletteColour[],
     algorithm: Algorithm
   ) => void;
+  reset: () => void;
 }
 
 export function PaletteSwitcher(props: PaletteSwitcherProps) {
-  const { srcImage, palette } = useSharedData();
+  const { srcImage, replaceSrcImage, palette, replacePalette } =
+    useSharedData();
   const [algorithm, setAlgorithm] = useState<Algorithm>(
     Algorithm.COLOUR_SIMILARITY
   );
@@ -33,11 +35,15 @@ export function PaletteSwitcher(props: PaletteSwitcherProps) {
     setAlgorithm(event.target.value as Algorithm);
   };
 
+  const resetAll = () => {
+    replaceSrcImage(undefined);
+    replacePalette([]);
+    props.reset();
+  };
+
   return (
     <Paper
       style={{
-        minHeight: "10vh",
-        width: "20vw",
         padding: "10px",
         display: "flex",
         flexDirection: "column",
@@ -68,6 +74,15 @@ export function PaletteSwitcher(props: PaletteSwitcherProps) {
         }}
       >
         Convert
+      </Button>
+      <Button
+        variant="contained"
+        color="secondary"
+        onClick={() => {
+          resetAll();
+        }}
+      >
+        Reset All
       </Button>
     </Paper>
   );

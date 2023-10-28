@@ -10,7 +10,7 @@ export function PaletteDisplay() {
   const { palette, replacePalette } = useSharedData();
 
   return (
-    <Paper style={{ minHeight: "10vh", width: "70vw", padding: "10px" }}>
+    <Paper style={{ padding: "10px", gridColumn: "span 2" }}>
       <div
         style={{
           display: "flex",

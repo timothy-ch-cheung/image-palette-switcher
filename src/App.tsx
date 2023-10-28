@@ -153,15 +153,11 @@ function App() {
       <AlertProvider>
         <DataProvider>
           <div className="App">
-            <div className="MainPanel">
-              <PaletteSelecter />
-              <ImageDropzone />
-              <ResultDisplay storedImage={convertedImage} />
-            </div>
-            <div className="MainPanel">
-              <PaletteSwitcher switchPalette={switchPalette} />
-              <PaletteDisplay />
-            </div>
+            <PaletteSelecter />
+            <ImageDropzone />
+            <ResultDisplay storedImage={convertedImage} />
+            <PaletteSwitcher switchPalette={switchPalette} reset={() => {setConvertedImage(TRANSPARENT_PLACEHOLDER_IMG)}}/>
+            <PaletteDisplay />
           </div>
         </DataProvider>
       </AlertProvider>

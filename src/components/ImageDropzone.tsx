@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Paper from "@mui/material/Paper";
 import Dropzone, { FileRejection } from "react-dropzone";
 import { useAlert } from "./AlertContext";
@@ -8,8 +8,6 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { useSharedData } from "./DataProvider";
 
 const COMPATIBLE_TYPES = ["image/png", "image/jpeg"];
-const DROP_SIZE = 50;
-const IMG_SIZE = DROP_SIZE - 5;
 
 function arrayBufferToBase64(buffer: ArrayBuffer) {
   var binary = "";
@@ -44,6 +42,21 @@ function base64ToImageData(base64: string, dimensions: Dimensions): ImageData {
 export default function ImageDropzone() {
   const { showAlert } = useAlert();
   const { srcImage, replaceSrcImage, updateSrcImage } = useSharedData();
+  const componentRef = useRef<HTMLDivElement | null>(null);
+  const [imageSize, setImageSize] = useState<Dimensions>({
+    width: 0,
+    height: 0,
+  });
+
+  useEffect(() => {
+    if (componentRef.current) {
+      const RATIO = 0.9;
+      setImageSize({
+        width: componentRef.current.offsetWidth * RATIO,
+        height: componentRef.current.offsetHeight * RATIO,
+      });
+    }
+  }, []);
 
   const dropFailedHandler = (fileRejections: FileRejection[]) => {
     let messages = new Set(
@@ -94,18 +107,16 @@ export default function ImageDropzone() {
     });
   };
 
-  const imgSize = (window.innerHeight * IMG_SIZE) / 100;
   return (
     <Paper
       style={{
-        width: `${DROP_SIZE}vh`,
-        height: `${DROP_SIZE}vh`,
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
         flex: "0 0 auto",
       }}
+      ref={componentRef}
     >
       {srcImage === undefined && (
         <Dropzone
@@ -118,8 +129,8 @@ export default function ImageDropzone() {
             <div
               {...getRootProps()}
               style={{
-                width: `${DROP_SIZE}vh`,
-                height: `${DROP_SIZE}vh`,
+                width: "100%",
+                height: "100%",
                 display: "flex",
                 flexDirection: "row",
                 justifyContent: "center",
@@ -133,18 +144,10 @@ export default function ImageDropzone() {
         </Dropzone>
       )}
       {srcImage !== undefined && (
-        <>
-          <IconButton
-            aria-label="delete"
-            onClick={() => replaceSrcImage(undefined)}
-          >
-            <DeleteIcon />
-          </IconButton>
-          <ImageDisplay
-            img={srcImage}
-            dimensions={{ width: imgSize, height: imgSize }}
-          />
-        </>
+        <ImageDisplay
+          img={srcImage}
+          dimensions={{ width: imageSize.width, height: imageSize.height }}
+        />
       )}
     </Paper>
   );
