@@ -4,7 +4,7 @@ import { ThemeProvider, createTheme } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import ImageDropzone from "./components/ImageDropzone";
 import { AlertProvider } from "./components/AlertContext";
-import { DataProvider, useSharedData } from "./components/DataProvider";
+import { DataProvider } from "./components/DataProvider";
 import { PaletteColour, PaletteSelecter } from "./components/PaletteSelecter";
 import { ResultDisplay } from "./components/ResultDisplay";
 import { PaletteDisplay } from "./components/PaletteDisplay";

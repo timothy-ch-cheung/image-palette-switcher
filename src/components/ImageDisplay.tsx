@@ -94,6 +94,7 @@ export default function ImageDisplay(props: ImageDisplayProps) {
     props.dimensions,
     props.img.dimensions.height,
     props.img.dimensions.width,
+    updateTargetDimensions,
   ]);
 
   useEffect(() => {
@@ -103,12 +104,8 @@ export default function ImageDisplay(props: ImageDisplayProps) {
       props.dimensions
     );
     updateIsPixelArt(numColours <= 256 && !isOverflowed);
-  }, [
-    props.dimensions,
-    props.img.dimensions,
-    props.img.image,
-    updateIsPixelArt,
-  ]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.dimensions, props.img.dimensions, props.img.image]);
 
   return (
     <div>
