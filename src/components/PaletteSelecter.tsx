@@ -9,7 +9,14 @@ import React, { useState } from "react";
 import { ColorResult, RGBColor, SketchPicker } from "react-color";
 import { useSharedData } from "./DataProvider";
 import chroma from "chroma-js";
-import { APOLLO, CC29 } from "./Palette";
+import {
+  APOLLO,
+  CC29,
+  INK,
+  KIROKAZE_GAMEBOY,
+  PEAR_36,
+  SWEETIE_16,
+} from "./Palette";
 
 export interface PaletteColour {
   hex: string;
@@ -20,6 +27,10 @@ enum PalettePreset {
   NONE = "NONE",
   CC29 = "CC-29",
   APOLLO = "APOLLO",
+  SWEETIE_16 = "SWEETIE 16",
+  PEAR_36 = "PEAR 36",
+  INK = "INK",
+  KIROKAZE_GAMEBOY = "KIROKAZE GAMEBOY",
 }
 
 function getPresetPalette(colours: string[]): PaletteColour[] {
@@ -35,6 +46,14 @@ function getPreset(preset: PalettePreset): PaletteColour[] {
       return getPresetPalette(CC29);
     case PalettePreset.APOLLO:
       return getPresetPalette(APOLLO);
+    case PalettePreset.SWEETIE_16:
+      return getPresetPalette(SWEETIE_16);
+    case PalettePreset.PEAR_36:
+      return getPresetPalette(PEAR_36);
+    case PalettePreset.INK:
+      return getPresetPalette(INK);
+    case PalettePreset.KIROKAZE_GAMEBOY:
+      return getPresetPalette(KIROKAZE_GAMEBOY);
     default:
       return [];
   }
@@ -62,11 +81,9 @@ export function PaletteSelecter() {
   };
 
   const presetChangeHandler = (event: SelectChangeEvent) => {
-    setSelectedPreset(event.target.value as PalettePreset);
-  };
-
-  const loadPalettePresetHandler = () => {
-    replacePalette(getPreset(selectedPreset));
+    const preset = event.target.value as PalettePreset;
+    setSelectedPreset(preset);
+    replacePalette(getPreset(preset));
   };
 
   const clearPaletteHandler = () => {
@@ -89,18 +106,10 @@ export function PaletteSelecter() {
         label="Age"
         onChange={presetChangeHandler}
       >
-        <MenuItem value={PalettePreset.NONE}>{PalettePreset.NONE}</MenuItem>
-        <MenuItem value={PalettePreset.CC29}>{PalettePreset.CC29}</MenuItem>
-        <MenuItem value={PalettePreset.APOLLO}>{PalettePreset.APOLLO}</MenuItem>
+        {Object.values(PalettePreset).map((palette) => (
+          <MenuItem value={palette}>{palette}</MenuItem>
+        ))}
       </Select>
-      <Button
-        variant="contained"
-        color="secondary"
-        onClick={loadPalettePresetHandler}
-        disabled={selectedPreset === PalettePreset.NONE}
-      >
-        Load Preset
-      </Button>
       <Button
         variant="contained"
         color="secondary"

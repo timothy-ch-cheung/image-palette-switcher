@@ -35,9 +35,8 @@ export function PaletteSwitcher(props: PaletteSwitcherProps) {
     setAlgorithm(event.target.value as Algorithm);
   };
 
-  const resetAll = () => {
+  const resetImages = () => {
     replaceSrcImage(undefined);
-    replacePalette([]);
     props.reset();
   };
 
@@ -79,10 +78,10 @@ export function PaletteSwitcher(props: PaletteSwitcherProps) {
         variant="contained"
         color="secondary"
         onClick={() => {
-          resetAll();
+          resetImages();
         }}
       >
-        Reset All
+        Reset Images
       </Button>
     </Paper>
   );
