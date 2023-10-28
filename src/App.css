@@ -8,12 +8,5 @@
   row-gap: 10px;
   min-height: 100vh;
   padding: 5vh 3.75vw;
-  gap: 10px
-}
-
-.MainPanel {
-  
-  display: flex;
-  flex-direction: row;
   gap: 10px;
 }

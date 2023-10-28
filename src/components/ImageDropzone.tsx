@@ -3,8 +3,6 @@ import Paper from "@mui/material/Paper";
 import Dropzone, { FileRejection } from "react-dropzone";
 import { useAlert } from "./AlertContext";
 import ImageDisplay, { Dimensions } from "./ImageDisplay";
-import { IconButton } from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
 import { useSharedData } from "./DataProvider";
 
 const COMPATIBLE_TYPES = ["image/png", "image/jpeg"];
