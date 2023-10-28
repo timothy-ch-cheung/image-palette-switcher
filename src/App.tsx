@@ -40,6 +40,10 @@ function getConversionFunction(
   }
 }
 
+function rgbToString(colour: RGBColor): string {
+  return `rgba(${colour.r}, ${colour.g}, ${colour.b}, ${colour.a})`;
+}
+
 function switchColourPalette(
   loadedImage: LoadedImage | undefined,
   palette: PaletteColour[],
@@ -60,6 +64,7 @@ function switchColourPalette(
     return TRANSPARENT_PLACEHOLDER_IMG;
   }
 
+  const colourMapping = new Map<string, RGBColor>();
   for (let y = 0; y < canvas.height; y++) {
     for (let x = 0; x < canvas.width; x++) {
       const index = (y * canvas.width + x) * 4;
@@ -70,7 +75,12 @@ function switchColourPalette(
       const alpha = loadedImage.image.data[index + 3];
 
       const currentColour = { r: red, g: green, b: blue };
-      const convertedColour = conversionFunction(currentColour, palette);
+      const colourKey = rgbToString(currentColour);
+      let convertedColour = colourMapping.get(colourKey);
+      if (convertedColour == null) {
+        convertedColour = conversionFunction(currentColour, palette);
+        colourMapping.set(colourKey, convertedColour);
+      }
 
       ctx.fillStyle = `rgba(${convertedColour.r}, ${convertedColour.g}, ${convertedColour.b}, ${alpha})`;
       ctx.fillRect(x, y, 1, 1);
