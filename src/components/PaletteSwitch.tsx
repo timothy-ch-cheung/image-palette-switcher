@@ -25,7 +25,7 @@ interface PaletteSwitcherProps {
 }
 
 export function PaletteSwitcher(props: PaletteSwitcherProps) {
-  const { srcImage, replaceSrcImage, palette, replacePalette } =
+  const { srcImage, replaceSrcImage, palette } =
     useSharedData();
   const [algorithm, setAlgorithm] = useState<Algorithm>(
     Algorithm.COLOUR_SIMILARITY
