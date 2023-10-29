@@ -1,5 +1,5 @@
 name: Deploy to Github Pages
-run-name: ${{ github.actor }} is deploying to https://timothy-ch-cheung.github.io/palette-switcher
+run-name: ${{ github.actor }} is deploying to https://timothy-ch-cheung.github.io/image-palette-switcher
 on:
   push:
     branches:
